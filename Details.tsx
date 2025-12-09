@@ -1,16 +1,27 @@
-import { Button, Text } from "@react-navigation/elements";
-import { useNavigation } from "@react-navigation/native";
-import { View } from "react-native";
+import {  Text } from "@react-navigation/elements";
+import { useRoute } from "@react-navigation/native";
+import { Image, ScrollView, View } from "react-native";
 
 export default function Details() {
-  const navigation = useNavigation();
-
+const route = useRoute();
+  const { album } = route.params;
+console.log('Album details:', album);
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button onPress={() => navigation.navigate('Details')}>
-        Go to Details... again
-      </Button>
-    </View>
+    <ScrollView style={{ flex: 1,}}
+     contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 15 }}
+    
+    >
+         <Image
+        source={{ uri: album.artworkUrl100.replace("100x100bb", "600x600bb") }}
+        style={{ width: 300, height: 300, borderRadius: 10 ,justifyContent:'center', alignSelf:'center', marginTop:20}}
+      />
+        <Text style={{ fontSize: 18, marginTop: 5 }}>{album.artistName}</Text>
+    
+    
+      <Text style={{ fontSize: 16, marginTop: 10 }}>
+        {album.longDescription ?? "No Description Available"}
+      </Text>
+    
+    </ScrollView>
   );
 }

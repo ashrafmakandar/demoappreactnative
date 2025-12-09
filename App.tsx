@@ -11,9 +11,16 @@ import Home from './Home';
 
 const RootStack = createNativeStackNavigator({
   screens: {
-    Home: Home,
+    Home: {
+      screen: Home,
+      options: {
+        title: "Albums",            
+        headerShown: true,      
+      },
+    },
     Details: Details,
   },
+  
 });
 
 const Navigation = createStaticNavigation(RootStack);

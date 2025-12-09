@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import { Button, Text } from "@react-navigation/elements";
+import {  Text } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
-import { FlatList, View } from "react-native";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { Album } from "./Album";
 import { useEffect,useState } from "react";
 
 const Home =()=> {
- //  const navigation = useNavigation();
+   const navigation = useNavigation();
    const [albums, setAlbums] = useState<Album[]>([]);
 const [loading,setLoading]= useState<boolean>(false);
    useEffect(()=>{
@@ -17,22 +17,32 @@ setLoading(true);
 
 const albumview=({item}: {item: Album})=>{
   return(
-    <View style={{padding:15, borderBottomWidth:1,
+    <TouchableOpacity 
+    onPress={()=>{
+        navigation.navigate('Details',{album:item});
+        
+    }}
+    
+    style={{padding:15, borderBottomWidth:1,
         shadowColor:'#000',
         shadowOffset:{width:0,height:2},
         shadowOpacity:0.90,
         shadowRadius:2,
-     borderBottomColor:'#ccc',elevation:10, margin:5, borderRadius:10, backgroundColor:'#f9f9f9'}}>
+     borderBottomColor:'#ccc',elevation:10, margin:5, borderRadius:10, backgroundColor:'#fff'}}>
+            <Image
+            resizeMode="contain"                source={{ uri: item.artworkUrl100.replace("100x100bb", "600x600bb") }}
+                style={{ width: 200, height: 200, borderRadius: 10 ,borderWidth:1, borderColor:'#ddd'}}
+              />
           <Text 
           numberOfLines={1} ellipsizeMode="tail"
           style={{
-            fontSize:17,fontWeight:"semibold"
+            fontSize:17,fontWeight:"semibold",padding:5
           }}>{item.artistName}</Text>
       <Text 
       numberOfLines={2} ellipsizeMode="tail"
-      style={{fontSize:16, fontWeight:"300"}}>{item.shortDescription!=null?item.shortDescription:"No description"}</Text>
+      style={{fontSize:16, fontWeight:"300",padding:5}}>{item.shortDescription!=null?item.shortDescription:"No description"}</Text>
     
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -59,10 +69,13 @@ const fetchAlbums=async()=>{
          
           {loading ?<Text>Loading...</Text>:null  }
           <FlatList
+    showsVerticalScrollIndicator={false}
+    contentContainerStyle={{ paddingBottom: 100 }}
           data={albums}
          
           renderItem={albumview}
           keyExtractor={(item) => item.collectionId?.toString()} 
+        
           />
      
     </View>
