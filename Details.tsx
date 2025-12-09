@@ -1,11 +1,12 @@
+/* eslint-disable react-native/no-inline-styles */
 import {  Text } from "@react-navigation/elements";
 import { useRoute } from "@react-navigation/native";
-import { Image, ScrollView, View } from "react-native";
+import { Image, ScrollView, } from "react-native";
 
 export default function Details() {
 const route = useRoute();
   const { album } = route.params;
-console.log('Album details:', album);
+
   return (
     <ScrollView style={{ flex: 1,}}
      contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 15 }}

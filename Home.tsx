@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { Album } from "./Album";
 import { useEffect,useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home =()=> {
    const navigation = useNavigation();
@@ -48,19 +49,28 @@ const albumview=({item}: {item: Album})=>{
 
 const fetchAlbums=async()=>{
   try{
-    console.log('Fetching albums...');
+  
     setLoading(true);
     
     const response=await fetch('https://itunes.apple.com/search?term=jack+johnson');
-    console.log('Response received',response);
+  
     const json=await response.json();
-    console.warn("json-->",json.results);
+  
     setLoading(false);
     setAlbums(json.results);
+     await AsyncStorage.setItem('albums', JSON.stringify(json.results));
   }catch(error){
-    console.log("ee",error)
+  
     setLoading(false);
     console.error(error);
+       const storedAlbums = await AsyncStorage.getItem('albums');
+
+      if (storedAlbums) {
+        setAlbums(JSON.parse(storedAlbums));
+      }
+  }
+  finally{
+    setLoading(false);
   }
 }
 
