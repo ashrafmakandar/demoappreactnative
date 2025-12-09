@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {  Text } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Image, TouchableOpacity, View } from "react-native";
 import { Album } from "./Album";
 import { useEffect,useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,8 @@ const Home =()=> {
    const navigation = useNavigation();
    const [albums, setAlbums] = useState<Album[]>([]);
 const [loading,setLoading]= useState<boolean>(false);
+const { width } = Dimensions.get("window");
+
    useEffect(()=>{
 setLoading(true);
     fetchAlbums();
@@ -31,17 +33,19 @@ const albumview=({item}: {item: Album})=>{
         shadowRadius:2,
      borderBottomColor:'#ccc',elevation:10, margin:5, borderRadius:10, backgroundColor:'#fff'}}>
             <Image
-            resizeMode="contain"                source={{ uri: item.artworkUrl100.replace("100x100bb", "600x600bb") }}
-                style={{ width: 200, height: 200, borderRadius: 10 ,borderWidth:1, borderColor:'#ddd'}}
+            resizeMode="contain"   
+            
+                         source={{ uri: item.artworkUrl100.replace("100x100bb", "600x600bb") }}
+                style={{ width: "100%", aspectRatio: 1}}
               />
           <Text 
           numberOfLines={1} ellipsizeMode="tail"
           style={{
-            fontSize:17,fontWeight:"semibold",padding:5
+            fontSize: width * 0.045,fontWeight:"semibold",padding:5
           }}>{item.artistName}</Text>
       <Text 
       numberOfLines={2} ellipsizeMode="tail"
-      style={{fontSize:16, fontWeight:"300",padding:5}}>{item.shortDescription!=null?item.shortDescription:"No description"}</Text>
+      style={{fontSize:width * 0.04, fontWeight:"300",padding:5}}>{item.shortDescription!=null?item.shortDescription:"No description"}</Text>
     
     </TouchableOpacity>
   )
@@ -77,14 +81,23 @@ const fetchAlbums=async()=>{
   return (
     <View style={{ flex: 1}}>
          
-          {loading ?<Text>Loading...</Text>:null  }
+          {loading ?
+        <ActivityIndicator
+        size={"small"}
+        style={{
+            justifyContent:"center",alignContent:"center"
+        }}
+        color={"green"}
+        />:null  
+        
+        }
           <FlatList
     showsVerticalScrollIndicator={false}
     contentContainerStyle={{ paddingBottom: 100 }}
           data={albums}
          
           renderItem={albumview}
-          keyExtractor={(item) => item.collectionId?.toString()} 
+          keyExtractor={(item) => item.artworkUrl100?.toString()} 
         
           />
      
